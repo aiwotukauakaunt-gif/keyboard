@@ -111,6 +111,9 @@
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; }
+/* スマホ：ダブルタップ拡大・ピンチ拡大を無効化（楽器操作を優先） */
+html, body { touch-action: manipulation; }
+button, .mg-cell, .chip, .tab { touch-action: manipulation; }
 body {
   margin: 0;
   font-family: var(--font);

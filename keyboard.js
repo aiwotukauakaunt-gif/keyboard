@@ -239,6 +239,9 @@
   }
   window.addEventListener("pointerup", endPointer);
   window.addEventListener("pointercancel", endPointer);
+  // iOS Safari：鍵盤上のタッチではブラウザ既定の動作（ダブルタップ拡大・ピンチ拡大・スクロール）を止める
+  for (const ev of ["touchstart", "touchmove", "touchend"]) kb.addEventListener(ev, e => e.preventDefault(), { passive: false });
+  for (const ev of ["gesturestart", "gesturechange"]) document.addEventListener(ev, e => { if (pointerNotes.size || e.target.closest?.(".keyboard, .m-grid")) e.preventDefault(); }, { passive: false });
 
   // ---- PCキーボード（JIS配列対応・上下2段の2マニュアル） ----
   let kbBase = 60; // C4
