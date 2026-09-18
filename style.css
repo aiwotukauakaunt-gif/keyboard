@@ -142,6 +142,15 @@ h1, h2, h3 { margin: 0; }
 .brand-sub { margin: 4px 0 0; font-size: 13px; color: var(--text-2); }
 .head-actions { display: flex; gap: 8px; }
 
+/* ---------- 初回案内 ---------- */
+.welcome { max-width: 980px; width: auto; margin: 6px auto 12px; position: relative; padding: 16px 44px 16px 20px; }
+.welcome-x { position: absolute; top: 10px; right: 10px; border: none; background: var(--surface-2); color: var(--muted); width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-weight: 800; }
+.welcome-title { font-size: 16px; font-weight: 800; margin-bottom: 8px; }
+.welcome-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.welcome-step { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; line-height: 1.6; color: var(--text-2); }
+.welcome-step b { flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--primary); color: var(--on-primary); display: grid; place-items: center; font-size: 13px; }
+@media (max-width: 640px) { .welcome-steps { grid-template-columns: 1fr; } }
+
 /* ---------- ツール表示トグル（複数同時表示） ---------- */
 .toolbar {
   position: sticky; top: 0; z-index: 50;

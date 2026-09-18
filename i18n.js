@@ -20,6 +20,11 @@
     "設定": "Settings", "保存": "Save", "追加": "Add", "適用": "Apply", "閉じる": "Close", "削除": "Delete", "呼び出し": "Load", "クリア": "Clear",
     "なし": "None", "オフ": "Off", "オン": "On", "自動": "Auto", "標準": "Normal", "分": "min", "秒": "s", "日": "d", "・": "·", "中": "M",
     "小": "S", "大": "L", "音": "Note",
+    // ---- 初回案内 ----
+    "はじめまして 👋": "Welcome 👋",
+    "下の鍵盤を押すか、PCのキーを叩くと音が鳴ります。管楽器の人は「移調（管）」を自分の楽器に。": "Tap the keys below or type on your PC keyboard to play. Wind players: set “Transposition” to your instrument.",
+    "上のボタンでツールを切り替え。複数を同時に表示できます。": "Use the buttons above to switch tools — you can show several at once.",
+    "「記録」で毎日の練習を残すと、続けやすくなります。データはこのブラウザの中だけに保存されます。": "Track your daily practice in “Log” to keep the habit going. Everything stays in this browser.",
     // ---- バックアップ ----
     "バックアップ": "Backup",
     "設定・プリセット・伴奏ループ・練習記録・日記をJSONファイルに書き出し／読み込みできます。別のブラウザや端末への引っ越しに。": "Export or import settings, presets, loops, practice log and notes as a JSON file — handy when moving to another browser or device.",

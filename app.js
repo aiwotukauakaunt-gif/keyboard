@@ -25,6 +25,14 @@
     });
   });
 
+  // ---- 初回案内（一度閉じたら表示しない） ----
+  if (!lsGet("keyboard_onboarded", false)) {
+    document.getElementById("welcome").hidden = false;
+    document.getElementById("welcomeClose").addEventListener("click", () => {
+      document.getElementById("welcome").hidden = true; lsSet("keyboard_onboarded", true);
+    });
+  }
+
   // ---- 初期化（順序：メトロノーム → ルーパー → 記録 → 録音） ----
   KB.metro.init();
   KB.looper.init();
