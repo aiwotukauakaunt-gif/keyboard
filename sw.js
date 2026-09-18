@@ -1,7 +1,7 @@
 /* Keyboard — Service Worker
    オフラインでも開けるように自分のファイルをキャッシュ。
-   ネットワーク優先（更新をすぐ反映）→ 失敗したらキャッシュ。 */
-const CACHE = "keyboard-v4";
+   ネットワーク優先（HTTPキャッシュを使わず毎回サーバーに確認＝更新をすぐ反映）→ 失敗したらキャッシュ。 */
+const CACHE = "keyboard-v5";
 const ASSETS = ["./", "./index.html", "./style.css", "./i18n.js", "./core.js", "./keyboard.js", "./tuner.js",
                 "./metronome.js", "./looper.js", "./recorder.js", "./log.js", "./app.js", "./manifest.json",
                 "./icon-192.png", "./icon-512.png", "./icon-512-maskable.png"];
@@ -15,7 +15,7 @@ self.addEventListener("activate", e => {
 self.addEventListener("fetch", e => {
   if (e.request.method !== "GET" || new URL(e.request.url).origin !== location.origin) return;
   e.respondWith(
-    fetch(e.request).then(res => {
+    fetch(e.request.url, { cache: "no-cache", credentials: "same-origin" }).then(res => {
       const copy = res.clone();
       caches.open(CACHE).then(c => c.put(e.request, copy));
       return res;
