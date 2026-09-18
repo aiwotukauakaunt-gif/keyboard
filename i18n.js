@@ -22,7 +22,7 @@
     "小": "S", "大": "L", "音": "Note",
     // ---- 初回案内 ----
     "はじめまして 👋": "Welcome 👋",
-    "下の鍵盤を押すか、PCのキーを叩くと音が鳴ります。管楽器の人は「移調（管）」を自分の楽器に。": "Tap the keys below or type on your PC keyboard to play. Wind players: set “Transposition” to your instrument.",
+    "下の鍵盤を押すか、PCのキーを叩くと音が鳴ります。管楽器の人は「移調（管）」を自分の楽器に。iPhone で鳴らないときはマナーモードを解除してください。": "Tap the keys below or type on your PC keyboard to play. Wind players: set “Transposition” to your instrument. On iPhone, turn off silent mode if you hear nothing.",
     "上のボタンでツールを切り替え。複数を同時に表示できます。": "Use the buttons above to switch tools — you can show several at once.",
     "「記録」で毎日の練習を残すと、続けやすくなります。データはこのブラウザの中だけに保存されます。": "Track your daily practice in “Log” to keep the habit going. Everything stays in this browser.",
     // ---- バックアップ ----
