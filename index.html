@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keyboard — 鍵盤・チューナー・メトロノーム 練習ツール</title>
+<meta name="description" content="ブラウザだけで使える音楽練習ツール。鍵盤・チューナー・多機能メトロノーム・伴奏ループ・録音・練習記録がひとつに。">
+<meta name="theme-color" content="#2b6fd6">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Keyboard">
+<!-- OGP：公開時は og:image / og:url を絶対URLに書き換えてください -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Keyboard — 鍵盤・チューナー・メトロノーム 練習ツール">
+<meta property="og:description" content="ブラウザだけで使える音楽練習ツール。鍵盤・チューナー・多機能メトロノーム・伴奏ループ・録音・練習記録がひとつに。">
+<meta property="og:image" content="og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="style.css">
+<script src="i18n.js"></script>
+</head>
+<body>
+
+<header class="app-head">
+  <div class="brand">
+    <div class="brand-mark">🎹</div>
+    <div>
+      <h1 class="brand-name">Keyboard</h1>
+      <p class="brand-sub">鍵盤 · チューナー · メトロノーム · 伴奏ループ · 録音 · 練習記録</p>
+    </div>
+  </div>
+  <div class="head-actions">
+    <button id="langBtn" class="btn ghost" title="Language / 言語">EN</button>
+    <button id="backupBtn" class="btn ghost" title="データの書き出し / 読み込み">💾 バックアップ</button>
+    <button id="themeBtn" class="btn ghost" title="ライト / ダーク切替">🌙 テーマ</button>
+  </div>
+</header>
+
+<dialog id="backupDlg" class="dlg">
+  <div class="card-title"><span class="ico">💾</span>バックアップ</div>
+  <p class="desc">設定・プリセット・伴奏ループ・練習記録・日記をJSONファイルに書き出し／読み込みできます。別のブラウザや端末への引っ越しに。<br>（録音した音声ファイルは含まれません）</p>
+  <div class="row">
+    <button id="bkExport" class="btn primary">⬇ 書き出し（JSON）</button>
+    <label class="btn">⬆ 読み込み<input type="file" id="bkImport" accept="application/json,.json" hidden></label>
+  </div>
+  <p class="note" id="bkStatus"></p>
+  <div class="row" style="justify-content:flex-end;margin-top:6px"><button id="bkClose" class="cbtn">閉じる</button></div>
+</dialog>
+
+<nav class="toolbar" id="tabbar" aria-label="表示するツール" title="複数のツールを同時に表示できます">
+  <button class="tab active" data-tab="play"><span class="tab-ico">🎹</span>鍵盤</button>
+  <button class="tab" data-tab="tune"><span class="tab-ico">🎯</span>チューナー</button>
+  <button class="tab active" data-tab="metro"><span class="tab-ico">🥁</span>メトロノーム</button>
+  <button class="tab" data-tab="loop"><span class="tab-ico">🔁</span>伴奏ループ</button>
+  <button class="tab" data-tab="rec"><span class="tab-ico">🎙️</span>録音</button>
+  <button class="tab" data-tab="track"><span class="tab-ico">📊</span>記録</button>
+</nav>
+
+<!-- ===================== 鍵盤 ===================== -->
+<section class="tabpane active" data-pane="play">
+
+  <div class="card">
+    <div class="card-title"><span class="ico">🎹</span>鍵盤<span class="card-tag">Keyboard</span></div>
+    <div class="controls">
+      <div class="ctrl">
+        <label for="transpose">移調（管）</label>
+        <select id="transpose">
+          <option value="0">C 管</option>
+          <option value="-1">B 管</option>
+          <option value="-2">Bb 管</option>
+          <option value="-3">A 管</option>
+          <option value="-4">Ab 管</option>
+          <option value="-5">G 管</option>
+          <option value="-6">F# 管</option>
+          <option value="5">F 管</option>
+          <option value="4">E 管</option>
+          <option value="3">Eb 管</option>
+          <option value="2">D 管</option>
+          <option value="1">Db 管</option>
+        </select>
+      </div>
+      <div class="ctrl">
+        <label for="oct">オクターブ</label>
+        <select id="oct">
+          <option value="2">+2</option>
+          <option value="1">+1</option>
+          <option value="0" selected>±0</option>
+          <option value="-1">−1</option>
+          <option value="-2">−2</option>
+        </select>
+      </div>
+      <div class="ctrl">
+        <label for="temperament">音律</label>
+        <select id="temperament">
+          <option value="equal">平均律</option>
+          <option value="just">純正律</option>
+        </select>
+      </div>
+      <div class="ctrl" id="rootCtrl" hidden>
+        <label>主音</label>
+        <button id="rootBtn" class="btn">C</button>
+      </div>
+      <div class="ctrl">
+        <label for="timbreSel">音色</label>
+        <select id="timbreSel"></select>
+      </div>
+      <div class="ctrl">
+        <label for="vol">音量</label>
+        <input type="range" id="vol" min="0" max="100" step="1" value="35">
+        <span class="val"><span id="volVal">35</span> %</span>
+      </div>
+      <div class="ctrl">
+        <label>保持（和音）</label>
+        <button id="holdBtn" class="btn">OFF</button>
+      </div>
+      <div class="ctrl">
+        <label>&nbsp;</label>
+        <button id="stopBtn" class="btn">⏹ 全部止める</button>
+      </div>
+    </div>
+
+    <details class="sec" style="margin-top:14px">
+      <summary>設定<span class="sec-sum" id="kbSettingSum"></span></summary>
+      <div class="sec-body">
+        <div class="controls">
+          <div class="ctrl">
+            <label for="pitch">基準ピッチ A</label>
+            <input type="range" id="pitch" min="415" max="466" step="1" value="442">
+            <span class="val"><span id="pitchVal">442</span> Hz</span>
+          </div>
+          <div class="ctrl">
+            <label>鍵盤の大きさ</label>
+            <div class="m-chips" id="keySize" style="justify-content:flex-start">
+              <button class="chip" data-kw="30">小</button>
+              <button class="chip sel" data-kw="40">中</button>
+              <button class="chip" data-kw="50">大</button>
+            </div>
+          </div>
+          <div class="ctrl">
+            <label>PCキーの高さ（← →）</label>
+            <div class="pc-shift">
+              <button id="pcDown" class="btn">◀</button>
+              <span class="val" id="pcBase">C4</span>
+              <button id="pcUp" class="btn">▶</button>
+            </div>
+          </div>
+          <div class="ctrl">
+            <label>MIDI キーボード</label>
+            <button id="midiBtn" class="btn">🎛 接続</button>
+            <span class="midi-status" id="midiStatus"></span>
+          </div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <div class="keyboard-wrap">
+    <div class="keyboard" id="keyboard"></div>
+  </div>
+
+  <details class="help">
+    <summary>操作方法とショートカット</summary>
+    <div class="help-body">
+      音域 A0〜C8。押した鍵は記譜音、鳴るのは選んだ管の実音。各鍵の上の文字＝PCキー。<br>
+      <kbd>←</kbd><kbd>→</kbd> 1オクターブ移動　<kbd>↑</kbd><kbd>↓</kbd> 半音移動　<kbd>Space</kbd> サステイン　タッチは複数指で同時発音<br>
+      <kbd>Enter</kbd> メトロノーム開始/停止　<kbd>Shift</kbd>+<kbd>Enter</kbd> タップ　<kbd>Shift</kbd>+<kbd>↑↓</kbd> テンポ±1　<kbd>Shift</kbd>+<kbd>←→</kbd> テンポ±10　<kbd>Shift</kbd>+<kbd>R</kbd> 録音<br>
+      ※PCキーボードは同時押しの数に上限があります。クラスターは保持モードかスペースで。
+    </div>
+  </details>
+
+  <div class="card">
+    <div class="card-title"><span class="ico">🔗</span>練習ハブ<span class="card-tag">Link</span></div>
+    <div class="hub-tiles">
+      <div class="hub-tile hub-tile-note">
+        <div class="hub-lab">いま弾いた音（実音）</div>
+        <div class="hub-big" id="hubNote">–</div>
+        <div class="hub-sub"><span id="hubHz">–</span> Hz</div>
+      </div>
+      <div class="hub-tile">
+        <div class="hub-lab">基準ピッチ</div>
+        <div class="hub-big">A=<span id="hubA">442</span></div>
+        <div class="hub-sub">Hz ・ 鍵盤とチューナーで共通</div>
+      </div>
+      <div class="hub-tile hub-tile-cents" id="hubCentsTile">
+        <div class="hub-lab">純正律 → 平均律との差</div>
+        <div class="hub-big" id="hubCentsVal">平均律</div>
+        <div class="hub-sub" id="hubCentsSub">音律を純正律にすると、平均律との差をここに表示</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ===================== チューナー ===================== -->
+<section class="tabpane" data-pane="tune">
+  <div class="card">
+    <div class="card-title"><span class="ico">🎯</span>チューナー<span class="card-tag">Tuner</span></div>
+    <div class="row center">
+      <button id="tunerBtn" class="btn big primary">🎤 チューナー開始</button>
+      <span id="tunerStatus" class="status"></span>
+    </div>
+
+    <div class="tuner-display" id="tunerDisplay" hidden style="margin-top:14px">
+      <div class="lcd">
+        <div class="lcd-top">
+          <span class="lcd-flat" id="tFlat">♭</span>
+          <span class="lcd-note-wrap">
+            <span class="lcd-note" id="tNote">–</span><span class="lcd-oct" id="tOct"></span>
+          </span>
+          <span class="lcd-sharp" id="tSharp">♯</span>
+        </div>
+
+        <div class="lcd-meter">
+          <svg viewBox="0 0 300 165" aria-hidden="true">
+            <line class="tick major" data-c="-50" x1="54.7" y1="95.0" x2="39.1" y2="86.0"/>
+            <line class="tick" data-c="-45" x1="54.5" y1="80.6" x2="46.4" y2="74.8"/>
+            <line class="tick" data-c="-40" x1="62.3" y1="71.0" x2="54.9" y2="64.4"/>
+            <line class="tick" data-c="-35" x1="71.0" y1="62.3" x2="64.4" y2="54.9"/>
+            <line class="tick" data-c="-30" x1="80.6" y1="54.5" x2="74.8" y2="46.4"/>
+            <line class="tick major" data-c="-25" x1="95.0" y1="54.7" x2="86.0" y2="39.1"/>
+            <line class="tick" data-c="-20" x1="102.0" y1="42.2" x2="97.9" y2="33.1"/>
+            <line class="tick" data-c="-15" x1="113.5" y1="37.8" x2="110.4" y2="28.3"/>
+            <line class="tick" data-c="-10" x1="125.5" y1="34.6" x2="123.4" y2="24.8"/>
+            <line class="tick" data-c="-5" x1="137.7" y1="32.6" x2="136.6" y2="22.7"/>
+            <line class="tick center" data-c="0" x1="150.0" y1="40.0" x2="150.0" y2="22.0"/>
+            <line class="tick" data-c="5" x1="162.3" y1="32.6" x2="163.4" y2="22.7"/>
+            <line class="tick" data-c="10" x1="174.5" y1="34.6" x2="176.6" y2="24.8"/>
+            <line class="tick" data-c="15" x1="186.5" y1="37.8" x2="189.6" y2="28.3"/>
+            <line class="tick" data-c="20" x1="198.0" y1="42.2" x2="202.1" y2="33.1"/>
+            <line class="tick major" data-c="25" x1="205.0" y1="54.7" x2="214.0" y2="39.1"/>
+            <line class="tick" data-c="30" x1="219.4" y1="54.5" x2="225.2" y2="46.4"/>
+            <line class="tick" data-c="35" x1="229.0" y1="62.3" x2="235.6" y2="54.9"/>
+            <line class="tick" data-c="40" x1="237.7" y1="71.0" x2="245.1" y2="64.4"/>
+            <line class="tick" data-c="45" x1="245.5" y1="80.6" x2="253.6" y2="74.8"/>
+            <line class="tick major" data-c="50" x1="245.3" y1="95.0" x2="260.9" y2="86.0"/>
+
+            <text class="lcd-scalelabel" x="28.8" y="83.0" text-anchor="middle">-50</text>
+            <text class="lcd-scalelabel" x="80.0" y="31.8" text-anchor="middle">-25</text>
+            <text class="lcd-scalelabel" x="150.0" y="13.0" text-anchor="middle">0</text>
+            <text class="lcd-scalelabel" x="220.0" y="31.8" text-anchor="middle">+25</text>
+            <text class="lcd-scalelabel" x="271.2" y="83.0" text-anchor="middle">+50</text>
+
+            <!-- 純正律マーカー：長3度(-13.7¢) / 短3度(+15.6¢) -->
+            <polygon class="lcd-tri" points="113.0,24.3 116.0,13.4 104.5,16.8"/>
+            <polygon class="lcd-tri" points="192.2,26.0 200.9,18.8 189.6,14.9"/>
+            <text class="lcd-trilabel" x="99" y="10" text-anchor="middle">3</text>
+            <text class="lcd-trilabel" x="205" y="12" text-anchor="middle">♭3</text>
+
+            <line class="lcd-needle" id="tNeedle" x1="150" y1="150" x2="150" y2="46"
+                  style="transform-origin:150px 150px; transform:rotate(0deg);"/>
+            <circle class="lcd-pivot" cx="150" cy="150" r="5.5"/>
+          </svg>
+        </div>
+
+        <div class="lcd-zero" id="tZero">▲</div>
+
+        <div class="lcd-bottom">
+          <span class="lcd-cents" id="tCents">±0¢</span>
+          <span class="lcd-hz" id="tHz">– Hz</span>
+          <span class="lcd-ref">A=<span id="tRef">442</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="drone" title="実音（コンサートピッチ・現在の音律）で鳴り続けます。マイクと併用するときはイヤホン推奨">
+      <span class="sub-label">ドローン</span>
+      <select id="drNote">
+        <option value="0">C</option><option value="1">Db</option><option value="2">D</option><option value="3">Eb</option>
+        <option value="4">E</option><option value="5">F</option><option value="6">F#</option><option value="7">G</option>
+        <option value="8">Ab</option><option value="9" selected>A</option><option value="10">Bb</option><option value="11">B</option>
+      </select>
+      <select id="drOct">
+        <option value="2">2</option><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option><option value="6">6</option>
+      </select>
+      <button id="drBtn" class="btn">▶ ドローン</button>
+      <input type="range" id="drVol" min="0" max="100" value="30" style="width:90px" aria-label="ドローン音量"><span id="drVolVal" class="num sub-label">30%</span>
+    </div>
+
+    <details class="sec" id="ltSec" style="margin-top:14px">
+      <summary>ロングトーン練習<span class="sec-sum" id="ltSum">オフ</span></summary>
+      <div class="sec-body">
+        <div class="row">
+          <button id="ltBtn" class="btn">▶ ロングトーン計測</button>
+          <label class="check">合格範囲 ±<input type="number" id="ltTol" class="m-num sm" min="1" max="30" value="5">¢</label>
+        </div>
+        <div class="lt-live">
+          <div class="lt-stat"><div class="lt-lab">音</div><div class="lt-val" id="ltNote">–</div></div>
+          <div class="lt-stat"><div class="lt-lab">保持</div><div class="lt-val"><span id="ltDur">0.0</span><small>秒</small></div></div>
+          <div class="lt-stat"><div class="lt-lab">範囲内</div><div class="lt-val"><span id="ltIn">0.0</span><small>秒</small></div></div>
+          <div class="lt-stat"><div class="lt-lab">安定度</div><div class="lt-val"><span id="ltPct">–</span><small>%</small></div></div>
+        </div>
+        <canvas id="ltCanvas" class="lt-canvas" height="150"></canvas>
+        <p class="note">音を伸ばすと自動で計測、音が切れると1回分として記録（1秒未満は無視）。</p>
+        <div class="row" style="justify-content:space-between;margin-top:12px">
+          <span class="section-title" style="margin:0">最近の結果</span>
+          <button id="ltClear" class="cbtn">結果を消す</button>
+        </div>
+        <div class="lt-list" id="ltList"></div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ===================== メトロノーム ===================== -->
+<section class="tabpane active" data-pane="metro">
+  <div class="card">
+    <div class="card-title"><span class="ico">🥁</span>メトロノーム<span class="card-tag">Metronome</span></div>
+    <div class="row center">
+      <button id="metroBtn" class="btn big primary">▶ 開始</button>
+      <button id="tapBtn" class="btn">TAP</button>
+      <button id="muteBtn" class="btn" title="音を消してプレイヘッドだけ表示">🔇 視覚のみ</button>
+      <button id="shareBtn" class="btn" title="テンポ・拍子・リズムをURLにして共有">🔗 共有</button>
+    </div>
+
+    <div class="m-top">
+      <div class="m-tempo-wrap">
+        <button class="mbtn" id="tempoDown" aria-label="テンポを下げる">−</button>
+        <div class="m-tempo">
+          <input type="number" id="mTempoIn" min="0.01" max="100000" step="0.01" value="120" class="m-tempo-input" aria-label="テンポ">
+          <small>BPM</small>
+        </div>
+        <button class="mbtn" id="tempoUp" aria-label="テンポを上げる">＋</button>
+      </div>
+      <input type="range" id="tempoSlider" min="15" max="400" value="120" aria-label="テンポスライダー">
+      <div class="m-tempo-name" id="mTempoName">Allegro</div>
+      <div class="m-calc">
+        <button class="cbtn" data-mul="0.5">÷2</button>
+        <button class="cbtn" data-mul="2">×2</button>
+        <button class="cbtn" data-mul="0.333333">÷3</button>
+        <button class="cbtn" data-mul="3">×3</button>
+        <span class="m-calc-custom">
+          n=<input type="number" id="calcN" min="0.01" max="100" step="0.01" value="2" class="m-num sm">
+          <button class="cbtn" id="calcDiv">÷n</button>
+          <button class="cbtn" id="calcMul">×n</button>
+        </span>
+      </div>
+    </div>
+
+    <div class="mg-head">
+      <span class="mg-sig">
+        <input type="number" id="beatN" min="1" max="64" value="4" class="m-num sm" aria-label="拍子（分子）"><span class="m-slash">/</span>
+        <input type="number" id="beatD" min="1" max="64" value="4" class="m-num sm" aria-label="拍子（分母）">
+        <span class="mg-sub">分割 <input type="number" id="subSel" min="1" max="32" value="1" class="m-num sm" aria-label="1拍の分割"></span>
+      </span>
+      <span class="mg-barcount" id="mgBar">小節 1</span>
+    </div>
+    <div class="m-grid" id="mGrid" title="セルをタップ：休み → 鳴る → アクセント → 休み"></div>
+    <div class="m-grid m-grid-poly" id="mGridPoly" hidden></div>
+    <div class="m-chips" id="mChips">
+      <button class="chip" data-p="beat">♩ 拍のみ</button>
+      <button class="chip" data-p="eighth">♫ 8分</button>
+      <button class="chip" data-p="triplet">3連</button>
+      <button class="chip" data-p="tripletmid">3連中抜き</button>
+      <button class="chip" data-p="sixteenth">16分</button>
+      <button class="chip" data-p="offbeat">裏打ち</button>
+      <button class="chip" data-p="clave">シンコペ</button>
+    </div>
+    <div class="mg-legend">
+      <span><i class="lg-off"></i>休み</span>
+      <span><i class="lg-on"></i>鳴る</span>
+      <span><i class="lg-head"></i>拍頭</span>
+      <span><i class="lg-acc"></i>アクセント</span>
+      <span><i class="lg-poly"></i>第2声</span>
+      <span><i class="lg-play"></i>再生位置</span>
+    </div>
+
+    <div class="sec-list">
+      <details class="sec">
+        <summary>アクセント / 変拍子<span class="sec-sum" id="sumAccent">自動</span></summary>
+        <div class="sec-body">
+          <div class="row center">
+            <span class="sub-label">グルーピング</span>
+            <input type="text" id="groupIn" placeholder="例: 3+2+2" class="m-text">
+            <button class="cbtn" id="groupApply">適用</button>
+          </div>
+          <p class="note">数字を + でつなぐと、その拍数ごとの頭がアクセントになります（合計＝拍子の分子）。</p>
+        </div>
+      </details>
+
+      <details class="sec">
+        <summary>音色<span class="sec-sum" id="sumSound">ビープ</span></summary>
+        <div class="sec-body">
+          <div class="row center"><label>音色 <select id="voiceSel"></select></label></div>
+        </div>
+      </details>
+
+      <details class="sec">
+        <summary>練習モード<span class="sec-sum" id="sumPractice">オフ</span></summary>
+        <div class="sec-body">
+          <div class="row center">
+            <label>ギャップ（無音小節）
+              <select id="gapSel">
+                <option value="off" selected>なし</option>
+                <option value="alt">1小節おきに無音</option>
+                <option value="31">3小節鳴らして1小節無音</option>
+                <option value="rand">ランダム無音</option>
+              </select>
+            </label>
+          </div>
+          <div class="row center">
+            <label class="check"><input type="checkbox" id="trainerOn"> テンポトレーナー：</label>
+            <input type="number" id="trainerBars" min="1" max="32" value="4" class="m-num sm"><span class="m-unit">小節ごとに</span>
+            <input type="number" id="trainerStep" min="1" max="20" value="5" class="m-num sm"><span class="m-unit">BPM 上げる</span>
+          </div>
+        </div>
+      </details>
+
+      <details class="sec">
+        <summary>音量<span class="sec-sum" id="sumVol">100%</span></summary>
+        <div class="sec-body">
+          <div class="vb-row" data-k="master">
+            <span class="vb-swatch vb-master">◎</span>
+            <span class="vb-name">全体</span>
+            <input type="range" id="volSlider" min="0" max="200" value="100">
+            <span id="mVolVal" class="vb-val">100%</span>
+          </div>
+          <div class="row center" style="margin-top:12px"><span class="sub-label">アクセント・拍・分割のバランス</span></div>
+          <div class="m-chips" id="vbPresets" style="margin-top:6px">
+            <button class="chip sel" data-vp="normal">標準</button>
+            <button class="chip" data-vp="flat">フラット</button>
+            <button class="chip" data-vp="accent">アクセント強調</button>
+            <button class="chip" data-vp="subq">裏を弱く</button>
+          </div>
+        </div>
+      </details>
+
+      <details class="sec">
+        <summary>カウントイン<span class="sec-sum" id="sumCount">なし</span></summary>
+        <div class="sec-body">
+          <div class="row center">
+            <label class="check"><input type="checkbox" id="countInOn"> 開始前に</label>
+            <input type="number" id="countInBars" min="1" max="4" value="1" class="m-num sm"><span class="m-unit">小節カウントする</span>
+          </div>
+        </div>
+      </details>
+
+      <details class="sec">
+        <summary>ポリリズム（2声）<span class="sec-sum" id="sumPoly">オフ</span></summary>
+        <div class="sec-body">
+          <div class="row center">
+            <label class="check"><input type="checkbox" id="polyOn"> 第2声を重ねる</label>
+            <span class="sub-label">1拍を</span>
+            <input type="number" id="polyDiv" min="1" max="32" value="3" class="m-num sm"><span class="m-unit">等分</span>
+            <span class="m-poly-hint" id="polyHint">→ 3 : 1</span>
+          </div>
+          <p class="note">例：3:2 なら分割を2、第2声を3に。</p>
+        </div>
+      </details>
+
+      <details class="sec">
+        <summary>設定の保存・呼び出し<span class="sec-sum" id="sumPreset"></span></summary>
+        <div class="sec-body">
+          <div class="row center">
+            <input type="text" id="presetName" placeholder="プリセット名" class="m-text">
+            <button class="cbtn" id="presetSave">保存</button>
+          </div>
+          <div class="preset-list" id="presetList"></div>
+          <p class="note" id="presetNote">テンポ・拍子・グリッド・音色・音量・各モードをまとめて保存します。</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 伴奏ループ ===================== -->
+<section class="tabpane" data-pane="loop">
+  <div class="card">
+    <div class="card-title"><span class="ico">🔁</span>伴奏ループ<span class="card-tag">Loop</span></div>
+
+    <div class="row">
+      <button id="lpRecBtn" class="btn big primary">● 録音</button>
+      <button id="lpDubBtn" class="btn big" disabled title="再生しながら次のループ頭から1周ぶん録音し、別トラックとして重ねます">＋ 重ね録り</button>
+      <button id="lpPlayBtn" class="btn big" disabled>▶ ループ再生</button>
+      <button id="lpClearBtn" class="cbtn" disabled>クリア</button>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <label class="check">長さ <input type="number" id="lpBars" min="1" max="32" value="4" class="m-num sm"><span class="m-unit">小節</span></label>
+      <label class="check">拍子 <span id="lpSig" class="lp-sig">4/4</span></label>
+      <label class="check"><input type="checkbox" id="lpCountIn" checked> カウントイン</label>
+      <label class="check"><input type="checkbox" id="lpMetroOn" checked> リズムも鳴らす</label>
+    </div>
+
+    <div class="lp-status" id="lpStatus">メトロノームのテンポで鍵盤を弾いて記録し、ループ再生します。テンポは後から変えられます。</div>
+    <div class="lp-meter"><div class="lp-meter-fill" id="lpMeter"></div><span class="lp-meter-lab" id="lpMeterLab"></span></div>
+    <div class="lp-tracks" id="lpTracks"></div>
+
+    <details class="sec" style="margin-top:14px">
+      <summary>保存・呼び出し</summary>
+      <div class="sec-body">
+        <div class="lp-save-row">
+          <input type="text" id="lpSaveName" placeholder="名前を付けて保存（例：Cメジャー 4小節）" class="m-text">
+          <button class="cbtn" id="lpSaveBtn" disabled>保存</button>
+        </div>
+        <div class="preset-list" id="lpSaveList"></div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ===================== 録音 ===================== -->
+<section class="tabpane" data-pane="rec">
+  <div class="card">
+    <div class="card-title"><span class="ico">🎙️</span>録音<span class="card-tag">Record</span></div>
+    <div class="row">
+      <button id="recBtn" class="btn big primary">● 録音開始</button>
+      <span id="recTime" class="rec-time">00:00</span>
+      <label class="check"><input type="checkbox" id="recMic" checked> マイク</label>
+      <label class="check"><input type="checkbox" id="recApp" checked> アプリ音</label>
+    </div>
+    <p class="note" id="recNote">録音はこのブラウザ内に保存され、リロードしても残ります。</p>
+    <div class="rec-list" id="recList"></div>
+  </div>
+</section>
+
+<section class="tabpane" data-pane="track">
+
+  <!-- ===== 今日 ===== -->
+  <div class="card">
+    <div class="card-title"><span class="ico">📊</span>練習記録<span class="card-tag">Today</span></div>
+
+    <div class="lg-next" id="lgNextBox" hidden>
+      <span class="lg-next-lab">前回の課題</span>
+      <span class="lg-next-text" id="lgNextText"></span>
+      <button class="cbtn" id="lgNextToMenu">メニューに入れる</button>
+    </div>
+
+    <div class="lg-today">
+      <div class="goal-ring">
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <defs>
+            <linearGradient id="goalGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#2b6fd6"/>
+              <stop offset="1" stop-color="#1e9e57"/>
+            </linearGradient>
+          </defs>
+          <circle class="gr-bg" cx="60" cy="60" r="52"/>
+          <circle class="gr-min" id="goalMinArc" cx="60" cy="60" r="52"/>
+          <circle class="gr-fg" id="goalArc" cx="60" cy="60" r="52"/>
+          <line class="gr-mark" id="goalMinMark" x1="60" y1="3" x2="60" y2="13"/>
+        </svg>
+        <div class="goal-center">
+          <div class="goal-today"><span id="logToday">0</span></div>
+          <div class="goal-unit">分 / 今日</div>
+          <div class="goal-of">目標 <span id="goalShow">30</span>分</div>
+        </div>
+      </div>
+      <div class="lg-side">
+        <div id="cheer" class="cheer"></div>
+        <div class="lg-line">
+          🔥 <b id="logStreak">0</b>日連続 ・ 今週 <b id="lgWeekOf">0/5日</b>
+          <span class="lg-line-sub">・ <span id="lgWeekStreak">0</span>週連続 ・ 最低ライン <span id="minGoalShow">5</span>分 ・ 通算 <span id="logTotal">0</span>分</span>
+        </div>
+        <div class="lg-timer">
+          <button id="logBtn" class="btn big primary">▶ 練習開始</button>
+          <span id="logElapsed" class="rec-time">00:00</span>
+          <span id="lgCurName" class="lg-curname"></span>
+          <select id="lgCurItem" hidden><option value="">（項目なし）</option></select>
+        </div>
+        <div class="lg-links">
+          <button id="logManual" class="lnk">手動で分を追加</button>
+          <button id="lgRestBtn" class="lnk" title="週に1回まで。連続記録が途切れません">今日は休息日にする</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 今日のメニュー -->
+    <div class="lg-sec-head">
+      <span class="lg-sec-title">今日のメニュー</span>
+      <span class="lg-menu-prog" id="lgMenuProg"></span>
+    </div>
+    <div class="lg-menu" id="lgMenu"></div>
+    <button class="lnk" id="lgMenuAddBtn">＋ 項目を追加</button>
+    <div class="lg-menu-add" id="lgMenuAddForm" hidden>
+      <input type="text" id="lgMenuName" class="m-text" maxlength="24" placeholder="項目（例：ロングトーン）">
+      <input type="number" id="lgMenuMin" class="m-num sm" min="1" max="300" value="10"><span class="m-unit">分</span>
+      <button id="lgMenuAdd" class="cbtn">追加</button>
+      <label class="check"><input type="checkbox" id="lgMenuTpl" checked> 毎日</label>
+    </div>
+
+    <details class="sec" style="margin-top:14px">
+      <summary>設定<span class="sec-sum" id="lgGoalSum"></span></summary>
+      <div class="sec-body">
+        <div class="lg-goal-row">
+          <div class="lg-goal-lab">最低ライン<small>「これだけはやる」の量</small></div>
+          <div class="m-chips" id="minChips">
+            <button class="chip mchip" data-min="3">3分</button>
+            <button class="chip mchip" data-min="5">5分</button>
+            <button class="chip mchip" data-min="10">10分</button>
+            <button class="chip mchip" data-min="15">15分</button>
+          </div>
+        </div>
+        <div class="lg-goal-row">
+          <div class="lg-goal-lab">1日の目標<small>調子がいい日に届かせたい量</small></div>
+          <div class="m-chips">
+            <button class="chip gchip" data-goal="15">15分</button>
+            <button class="chip gchip" data-goal="30">30分</button>
+            <button class="chip gchip" data-goal="45">45分</button>
+            <button class="chip gchip" data-goal="60">60分</button>
+            <span class="goal-custom-row">
+              <input type="number" id="goalCustom" min="1" max="600" class="goal-input" placeholder="自由">
+              <span class="goal-input-unit">分</span>
+              <button id="goalSetBtn" class="cbtn">設定</button>
+            </span>
+          </div>
+        </div>
+        <div class="lg-goal-row">
+          <div class="lg-goal-lab">週に何日<small>毎日でなくてOK</small></div>
+          <div class="m-chips" id="weekChips">
+            <button class="chip wchip" data-w="3">3日</button>
+            <button class="chip wchip" data-w="4">4日</button>
+            <button class="chip wchip" data-w="5">5日</button>
+            <button class="chip wchip" data-w="6">6日</button>
+            <button class="chip wchip" data-w="7">7日</button>
+          </div>
+        </div>
+        <div class="lg-goal-row">
+          <label class="check"><input type="checkbox" id="logAuto" checked> 音を鳴らしたら自動で計測開始</label>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- ===== これまで ===== -->
+  <div class="card">
+    <div class="card-title"><span class="ico">📈</span>これまで<span class="card-tag">Progress</span></div>
+
+    <div class="lg-week" id="lgWeek"></div>
+
+    <div class="lg-level">
+      <div class="lg-level-head"><b id="lgLevel">Lv.1</b><span id="lgLevelHours">通算 0.0 時間</span><span id="lgLevelNext" class="lg-level-next"></span></div>
+      <div class="lg-level-bar"><i id="lgLevelBar"></i></div>
+    </div>
+
+    <div class="lg-heat" id="lgHeat"></div>
+
+    <details class="sec" style="margin-top:14px">
+      <summary>くわしい統計</summary>
+      <div class="sec-body"><div class="lg-summary" id="lgSummary"></div></div>
+    </details>
+    <details class="sec">
+      <summary>実績バッジ<span class="sec-sum" id="badgeSum"></span></summary>
+      <div class="sec-body"><div class="badge-shelf" id="badgeShelf"></div></div>
+    </details>
+    <details class="sec">
+      <summary>自分で作る目標<span class="sec-sum" id="cgoalSum"></span></summary>
+      <div class="sec-body">
+        <div class="cgoal-list" id="cgoalList"></div>
+        <div class="cgoal-add">
+          <div class="cgoal-add-row1">
+            <input type="text" id="cgIcon" class="cg-icon-in" maxlength="2" placeholder="🎵">
+            <input type="text" id="cgName" class="cg-name-in" maxlength="20" placeholder="目標の名前（例：発表会の曲を通す）">
+          </div>
+          <div class="cgoal-add-row2">
+            <select id="cgType" class="cg-type">
+              <option value="total">通算</option>
+              <option value="streak">連続日数</option>
+              <option value="day">1日の練習</option>
+              <option value="days">練習した日数</option>
+              <option value="manual">自分でチェック（手動達成）</option>
+            </select>
+            <input type="number" id="cgTarget" min="1" class="cg-target" placeholder="数値">
+            <span id="cgUnit" class="cg-unit">分</span>
+            <button id="cgAdd" class="cbtn">＋作成</button>
+          </div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- ===== 振り返り ===== -->
+  <div class="card">
+    <div class="card-title"><span class="ico">📓</span>振り返り<span class="card-tag">Reflect</span></div>
+    <div class="diary-edit">
+      <div class="diary-date-row">
+        <input type="date" id="diaryDate" class="m-text">
+        <div class="mood-pick" id="diaryMoodPick">
+          <button class="mood" data-m="😄" title="好調">😄</button>
+          <button class="mood" data-m="🙂" title="まあまあ">🙂</button>
+          <button class="mood" data-m="😐" title="ふつう">😐</button>
+          <button class="mood" data-m="😣" title="苦戦">😣</button>
+        </div>
+        <input type="hidden" id="diaryMood" value="">
+      </div>
+      <input type="text" id="diaryWin" class="rf-in" maxlength="80" placeholder="✅ できたこと（例：Bbのロングトーンが±5¢に入った）">
+      <input type="text" id="diaryNext" class="rf-in" maxlength="80" placeholder="🎯 次の課題（例：Fの高音の音程を安定させる）">
+      <textarea id="diaryText" class="diary-text" placeholder="📝 メモ（自由）"></textarea>
+      <div class="diary-actions">
+        <span id="diaryStatus" class="diary-status"></span>
+        <button id="diarySave" class="cbtn">保存</button>
+      </div>
+    </div>
+    <div class="diary-list" id="diaryList"></div>
+  </div>
+
+</section>
+
+<footer class="foot">Keyboard — ブラウザだけで動く練習ツール。データはこのブラウザ内（localStorage）にだけ保存されます。</footer>
+
+
+<script src="core.js"></script>
+<script src="keyboard.js"></script>
+<script src="tuner.js"></script>
+<script src="metronome.js"></script>
+<script src="looper.js"></script>
+<script src="recorder.js"></script>
+<script src="log.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
