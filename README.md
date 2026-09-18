@@ -1,5 +1,7 @@
 # Keyboard — ブラウザだけで動く音楽練習ツール
 
+**▶ 使う：https://aiwotukauakaunt-gif.github.io/keyboard/**
+
 鍵盤 · チューナー · メトロノーム · 伴奏ループ · 録音 · 練習記録 がひとつになった、
 インストール不要の練習ツールです。外部ライブラリなし（HTML / CSS / JS の3ファイル）。
 
@@ -61,7 +63,6 @@ https で公開すると、スマホ/PCの「ホーム画面に追加」「ア�
 
 ## 公開時にやること
 
-- `index.html` の `og:image` を絶対URL（例 `https://example.com/keyboard/og-image.png`）に書き換える。`og:url` も追加推奨。
 - `sw.js` の `CACHE` のバージョン文字列を更新のたびに上げる（古いキャッシュを確実に捨てるため）。
 - GitHub Pages / Netlify / Cloudflare Pages など、静的ホスティングにフォルダごと置けば動きます。
 
