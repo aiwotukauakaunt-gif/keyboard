@@ -17,6 +17,7 @@
     "表示するツール": "Tools", "複数のツールを同時に表示できます": "You can show several tools at once",
     "鍵盤": "Keyboard", "チューナー": "Tuner", "メトロノーム": "Metronome", "伴奏ループ": "Looper", "録音": "Recorder", "記録": "Log",
     "Keyboard — ブラウザだけで動く練習ツール。データはこのブラウザ内（localStorage）にだけ保存されます。": "Keyboard — practice tools that run entirely in your browser. Your data stays in this browser (localStorage).",
+    "ソースコード": "Source code", "不具合・要望はこちら": "Report a bug / request",
     "設定": "Settings", "保存": "Save", "追加": "Add", "適用": "Apply", "閉じる": "Close", "削除": "Delete", "呼び出し": "Load", "クリア": "Clear",
     "なし": "None", "オフ": "Off", "オン": "On", "自動": "Auto", "標準": "Normal", "分": "min", "秒": "s", "日": "d", "・": "·", "中": "M",
     "小": "S", "大": "L", "音": "Note",

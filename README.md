@@ -1,5 +1,7 @@
 # Keyboard — ブラウザだけで動く音楽練習ツール
 
+> **English:** Keyboard is a free, install-free set of practice tools for musicians (especially wind players) that runs entirely in your browser: a transposing keyboard with just intonation, a tuner with drone and long-tone tracking, an advanced metronome with shareable rhythms, a backing looper, a recorder, and a habit-friendly practice log. Switch the UI to English with the **EN** button. Your data never leaves your browser.
+
 **▶ 使う：https://aiwotukauakaunt-gif.github.io/keyboard/**
 
 鍵盤 · チューナー · メトロノーム · 伴奏ループ · 録音 · 練習記録 がひとつになった、

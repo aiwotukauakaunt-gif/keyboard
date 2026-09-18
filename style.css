@@ -707,7 +707,8 @@ input[type="checkbox"] { accent-color: var(--primary); width: 17px; height: 17px
 .lp-track.muted .lp-mute { background: var(--warn); border-color: var(--warn); color: #1a1206; }
 
 /* ---------- フッター ---------- */
-.foot { text-align: center; font-size: 12px; color: var(--muted); margin-top: 24px; }
+.foot { text-align: center; font-size: 12px; color: var(--muted); margin-top: 24px; line-height: 1.8; }
+.foot a { color: var(--text-2); font-weight: 700; }
 
 /* ---------- スマホ ---------- */
 @media (max-width: 480px) {
