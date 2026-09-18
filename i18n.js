@@ -71,6 +71,8 @@
     "ロングトーン練習": "Long tones", "▶ ロングトーン計測": "▶ Measure long tones", "■ 計測停止": "■ Stop measuring", "計測中": "Measuring",
     "合格範囲 ±": "Tolerance ±", "保持": "Held", "範囲内": "In tune", "安定度": "Stability",
     "音を伸ばすと自動で計測、音が切れると1回分として記録（1秒未満は無視）。": "Measuring starts when you hold a note and one attempt is logged when it stops (under 1 s is ignored).",
+    "音ごとのまとめ": "By note", "結果がたまると、音ごとの平均安定度と最長記録をここに表示します。": "Average stability and longest hold per note will appear here as results accumulate.",
+    "最長 {n}秒 ・ {n}回": "best {1} s · {2}×",
     "最近の結果": "Recent results", "結果を消す": "Clear results", "ロングトーンの結果をすべて消しますか？": "Delete all long-tone results?",
     "まだ結果がありません。チューナーを起動して音を伸ばしてみましょう。": "No results yet. Start the tuner and hold a note.",
     "{n}秒 ・ 平均 {n}¢ ・ 最大 {n}¢ ・ {s}": "{1} s · avg {2}¢ · max {3}¢ · {4}",

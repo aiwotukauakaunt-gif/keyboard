@@ -272,7 +272,24 @@
       prev = s;
     }
   }
+  // 音ごとのまとめ：平均安定度・最長・回数（音の高さ順）
+  function ltRenderSummary() {
+    const wrap = $("ltSummary"); wrap.innerHTML = "";
+    const by = new Map();
+    for (const r of ltHist) {
+      const s = by.get(r.midi) || { n: 0, pct: 0, best: 0 };
+      s.n++; s.pct += r.pct; s.best = Math.max(s.best, r.dur); by.set(r.midi, s);
+    }
+    if (!by.size) { wrap.innerHTML = `<p class="note" style="margin:0">結果がたまると、音ごとの平均安定度と最長記録をここに表示します。</p>`; return; }
+    [...by.entries()].sort((a, b) => a[0] - b[0]).forEach(([midi, s]) => {
+      const avg = Math.round(s.pct / s.n);
+      const el = document.createElement("div"); el.className = "lt-sum-row" + (avg < 60 ? " bad" : avg >= 85 ? " good" : "");
+      el.innerHTML = `<span class="lt-n">${noteName(midi)}</span><span class="lt-sum-pct">${avg}%</span><span class="lt-sum-bar"><i style="width:${avg}%"></i></span><span class="lt-meta">最長 ${s.best}秒 ・ ${s.n}回</span>`;
+      wrap.appendChild(el);
+    });
+  }
   function ltRenderList() {
+    ltRenderSummary();
     const wrap = $("ltList"); wrap.innerHTML = "";
     if (!ltHist.length) { wrap.innerHTML = `<p class="note" style="margin:0">まだ結果がありません。チューナーを起動して音を伸ばしてみましょう。</p>`; return; }
     ltHist.slice(0, 12).forEach(r => {

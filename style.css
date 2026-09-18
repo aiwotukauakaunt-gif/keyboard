@@ -694,6 +694,15 @@ input[type="checkbox"] { accent-color: var(--primary); width: 17px; height: 17px
 .lt-row .lt-pct { color: var(--success); font-weight: 800; }
 .lt-row .lt-pct.bad { color: var(--accent); }
 .lt-row .lt-meta { color: var(--text-2); font-size: 12px; }
+.lt-sum { display: flex; flex-direction: column; gap: 4px; }
+.lt-sum-row { display: grid; grid-template-columns: 56px 48px 1fr auto; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; padding: 4px 10px; font-variant-numeric: tabular-nums; }
+.lt-sum-row .lt-n { font-size: 16px; font-weight: 800; font-family: var(--font-num); }
+.lt-sum-pct { font-weight: 800; color: var(--text-2); }
+.lt-sum-row.good .lt-sum-pct { color: var(--success); } .lt-sum-row.bad .lt-sum-pct { color: var(--accent); }
+.lt-sum-bar { height: 8px; border-radius: 4px; background: var(--surface-3); overflow: hidden; }
+.lt-sum-bar i { display: block; height: 100%; background: var(--primary); }
+.lt-sum-row.good .lt-sum-bar i { background: var(--success); } .lt-sum-row.bad .lt-sum-bar i { background: var(--accent); }
+.lt-sum-row .lt-meta { color: var(--muted); font-size: 12px; }
 @media (max-width: 480px) { .lt-live { grid-template-columns: repeat(2, 1fr); } }
 
 /* ---------- 伴奏ループ：トラック ---------- */

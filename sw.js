@@ -1,7 +1,7 @@
 /* Keyboard — Service Worker
    オフラインでも開けるように自分のファイルをキャッシュ。
    ネットワーク優先（HTTPキャッシュを使わず毎回サーバーに確認＝更新をすぐ反映）→ 失敗したらキャッシュ。 */
-const CACHE = "keyboard-v5";
+const CACHE = "keyboard-v6";
 const ASSETS = ["./", "./index.html", "./style.css", "./i18n.js", "./core.js", "./keyboard.js", "./tuner.js",
                 "./metronome.js", "./looper.js", "./recorder.js", "./log.js", "./app.js", "./manifest.json",
                 "./icon-192.png", "./icon-512.png", "./icon-512-maskable.png"];
