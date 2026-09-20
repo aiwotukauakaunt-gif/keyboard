@@ -743,9 +743,11 @@ input[type="checkbox"] { accent-color: var(--primary); width: 17px; height: 17px
 .studio-card { width: min(1100px, 100%); }
 .studio-card .desc a.studio-open { margin-left: 8px; white-space: nowrap; }
 .studio-frame {
-  border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); border: 1px solid var(--border-strong);
   background: var(--bg); /* 中身（録音機）は record/css/host-keyboard.css でこちらの配色に揃う */
+  /* iOS Safari は iframe の高さを中身に合わせて伸ばすことがある。高さは外側の箱が持ち、iframe は箱いっぱいにする */
+  height: min(80vh, 900px); overflow: auto; -webkit-overflow-scrolling: touch;
 }
-.studio-frame iframe { display: block; width: 100%; height: min(80vh, 900px); border: 0; background: var(--bg); }
+.studio-frame iframe { display: block; width: 1px; min-width: 100%; height: 100%; min-height: 100%; border: 0; background: var(--bg); }
 .linkbtn { background: none; border: 0; padding: 0; color: var(--primary); font: inherit; font-weight: 700; cursor: pointer; text-decoration: underline; }
-@media (max-width: 640px) { .studio-frame iframe { height: 85vh; } .studio-card { padding: 12px 10px 14px; } }
+@media (max-width: 640px) { .studio-frame { height: 85vh; } .studio-card { padding: 12px 10px 14px; } }
