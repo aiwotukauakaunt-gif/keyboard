@@ -27,7 +27,7 @@
     <div class="brand-mark">🎹</div>
     <div>
       <h1 class="brand-name">Keyboard</h1>
-      <p class="brand-sub">鍵盤 · チューナー · メトロノーム · 伴奏ループ · 録音 · 練習記録</p>
+      <p class="brand-sub">鍵盤 · チューナー · メトロノーム · 伴奏ループ · 録音 · 本格録音 · 練習記録</p>
     </div>
   </div>
   <div class="head-actions">
@@ -64,6 +64,7 @@
   <button class="tab active" data-tab="metro"><span class="tab-ico">🥁</span>メトロノーム</button>
   <button class="tab" data-tab="loop"><span class="tab-ico">🔁</span>伴奏ループ</button>
   <button class="tab" data-tab="rec"><span class="tab-ico">🎙️</span>録音</button>
+  <button class="tab" data-tab="studio"><span class="tab-ico">🎚️</span>本格録音</button>
   <button class="tab" data-tab="track"><span class="tab-ico">📊</span>記録</button>
 </nav>
 
@@ -522,6 +523,17 @@
     </div>
     <p class="note" id="recNote">録音はこのブラウザ内に保存され、リロードしても残ります。</p>
     <div class="rec-list" id="recList"></div>
+    <p class="note studio-hint">もっと本格的に録るなら → <button type="button" class="linkbtn" id="toStudio">🎚️ 本格録音</button>（マイクの音をそのまま 24bit で。鍵盤やメトロノームの音は別トラックに）</p>
+  </div>
+</section>
+
+<!-- ===================== 本格録音（Tonmeister） ===================== -->
+<section class="tabpane" data-pane="studio">
+  <div class="card studio-card">
+    <div class="card-title"><span class="ico">🎚️</span>本格録音<span class="card-tag">Tonmeister</span></div>
+    <p class="desc">楽器のための録音機。マイクの音を、ブラウザの加工なしにそのまま残します（True Peak メーター・押す前の音も残す・24bit / FLAC）。鍵盤・メトロノーム・伴奏ループの音は<b>別のトラック</b>に録るので、マイクの録りは素のまま。<a class="studio-open" href="record/index.html" target="_blank" rel="noopener">別ウィンドウで開く ↗</a></p>
+    <div class="studio-frame"><iframe id="studioFrame" title="本格録音" allow="microphone; autoplay" data-src="record/index.html?host=keyboard"></iframe></div>
+    <p class="note">録音はこのブラウザの中（OPFS）に残り、「録音一覧」から書き出せます。マイクの許可を求められたら許してください。</p>
   </div>
 </section>
 

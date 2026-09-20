@@ -122,6 +122,7 @@
   Object.assign(KB, {
     $, T, hasLS, lsGet, lsSet, pad2, fmtClock, todayStr, escapeHtml,
     ensureCtx, outNode, goalToast,
-    audio: { get ctx() { return ctx; }, get appBus() { return appBus; } }
+    // recStream：全アプリ音（鍵盤・メトロノーム・伴奏ループ・ドローン）の MediaStream。本格録音（record/）が別トラックとして録る
+    audio: { get ctx() { return ctx; }, get appBus() { return appBus; }, get recStream() { return recDest ? recDest.stream : null; } }
   });
 })();

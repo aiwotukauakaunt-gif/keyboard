@@ -735,3 +735,14 @@ input[type="checkbox"] { accent-color: var(--primary); width: 17px; height: 17px
   .toolbar { padding: 8px 8px; gap: 6px; }
   .toolbar-lab { display: none; }
 }
+
+/* ---------- 本格録音（Tonmeister を枠に入れる） ---------- */
+.studio-card { width: min(1100px, 100%); }
+.studio-card .desc a.studio-open { margin-left: 8px; white-space: nowrap; }
+.studio-frame {
+  border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border-strong);
+  background: #0C0B09; /* 中身（録音機）は黒。器材らしく、ライト/ダークどちらの外側にも合う */
+}
+.studio-frame iframe { display: block; width: 100%; height: min(80vh, 900px); border: 0; background: #0C0B09; }
+.linkbtn { background: none; border: 0; padding: 0; color: var(--primary); font: inherit; font-weight: 700; cursor: pointer; text-decoration: underline; }
+@media (max-width: 640px) { .studio-frame iframe { height: 85vh; } .studio-card { padding: 12px 10px 14px; } }

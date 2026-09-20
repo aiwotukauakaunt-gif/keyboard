@@ -11,18 +11,35 @@
   // ==========================================================
   const TABS_KEY = "keyboard_tabs_v1";
   const savedTabs = lsGet(TABS_KEY, null);
+  // 本格録音（Tonmeister）は重いので、枠を開いたときに初めて読み込む
+  const studioFrame = document.getElementById("studioFrame");
+  function loadStudio() {
+    if (studioFrame && !studioFrame.src) {
+      // ?fake=1 で開いたときは中の録音機にも渡す（マイクの代わりに合成音。動作確認用）
+      const fake = new URLSearchParams(location.search).has("fake") ? "&fake=1" : "";
+      studioFrame.src = studioFrame.dataset.src + fake;
+    }
+  }
   document.querySelectorAll(".tab").forEach(t => {
     const name = t.dataset.tab;
     if (Array.isArray(savedTabs)) {
       const on = savedTabs.includes(name);
       t.classList.toggle("active", on);
       document.querySelector(`.tabpane[data-pane="${name}"]`).classList.toggle("active", on);
+      if (on && name === "studio") loadStudio();
     }
     t.addEventListener("click", () => {
       const on = t.classList.toggle("active");
       document.querySelector(`.tabpane[data-pane="${name}"]`).classList.toggle("active", on);
+      if (on && name === "studio") loadStudio();
       lsSet(TABS_KEY, [...document.querySelectorAll(".tab.active")].map(x => x.dataset.tab));
     });
+  });
+  const toStudio = document.getElementById("toStudio");
+  if (toStudio) toStudio.addEventListener("click", () => {
+    const t = document.querySelector('.tab[data-tab="studio"]');
+    if (t && !t.classList.contains("active")) t.click();
+    document.querySelector('.tabpane[data-pane="studio"]').scrollIntoView({ behavior: "smooth", block: "start" });
   });
 
   // ---- 初回案内（一度閉じたら表示しない） ----
