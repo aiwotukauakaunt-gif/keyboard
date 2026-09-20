@@ -143,6 +143,7 @@
     "分 / 今日": "min today", "目標": "Goal", "目標 {n}分": "Goal {1} min",
     "日連続 ・ 今週": "-day streak · this week", "週連続 ・ 最低ライン": "-week streak · minimum", "分 ・ 通算": "min · total",
     "▶ 練習開始": "▶ Start practice", "■ 練習終了（記録する）": "■ Finish (log it)", "「{s}」を計測中": "Timing “{1}”", "計測中。止めたら自動で記録します": "Timing… stop to log it",
+    "🎚️ 今日の本格録音 ": "🎚️ Studio takes today: ", "本 ・ ": " · ", "・ 最新「{s}」": "· latest “{1}”", "録音を今日の記録に残しました": "Recording added to today's log",
     "手動で分を追加": "Add minutes manually", "追加する練習時間（分）を入力": "Minutes to add", "今日は休息日にする": "Mark today as rest day", "😴 休息日（解除する）": "😴 Rest day (undo)",
     "週に1回まで。連続記録が途切れません": "Once a week. Keeps your streak alive", "😴 今日は休息日。連続記録は途切れません": "😴 Rest day. Your streak is safe",
     "今日はもう練習しています 💪": "You already practiced today 💪", "休息日は週に1回までです": "Only one rest day per week",

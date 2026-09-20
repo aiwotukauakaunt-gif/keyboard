@@ -96,6 +96,37 @@
     renderLog(); renderDiary(); checkBadges();
   }
 
+  // ---- 本格録音（Tonmeister）との行き来 ----
+  // 録音機は record/ の iframe から window.parent.KB を呼ぶ。テイクは日ごとに控えて「今日」に出す
+  function renderTakes(d) {
+    const rec = pr.days[d];
+    const takes = rec && rec.takes || [];
+    const box = $("lgTakes"); if (!box) return;
+    box.hidden = takes.length === 0;
+    if (!takes.length) return;
+    const sec = takes.reduce((a, t) => a + (t.sec || 0), 0);
+    $("lgTakesN").textContent = takes.length;
+    $("lgTakesSec").textContent = fmtClock(sec);
+    const last = takes[takes.length - 1];
+    $("lgTakesLast").textContent = last.name ? `・ 最新「${last.name}」` : "";
+  }
+  /** 録音機が1本録り終えたとき。{ seconds, name, item } */
+  function studioTake(info) {
+    const d = todayStr(); const rec = dayRec(d);
+    if (!rec.takes) rec.takes = [];
+    rec.takes.push({ t: Date.now(), sec: Math.round(info.seconds || 0), name: (info.name || "").slice(0, 40), item: info.item || null });
+    if (rec.takes.length > 200) rec.takes = rec.takes.slice(-200);
+    rec.rest = false;
+    prSave(); renderTakes(d);
+    goalToast(`🎚️ ${T("録音を今日の記録に残しました")}（${fmtClock(info.seconds || 0)}）`);
+  }
+  /** いま計測中のメニュー項目（録音機がテイク名に添える）。無ければ ""。 */
+  function practiceItem() {
+    if (!logRunning) return "";
+    const id = $("lgCurItem").value; const it = id && todayMenu()[id];
+    return it ? it.name : "";
+  }
+
   // ---- 今日のメニュー ----
   function todayMenu() {
     const rec = dayRec(todayStr());
@@ -200,6 +231,7 @@
     $("minGoalShow").textContent = pr.minGoal;
     $("lgWeekOf").textContent = `${weekDays(log, ws)}/${pr.weekTarget}日`;
     $("lgWeekStreak").textContent = computeWeekStreak(log);
+    renderTakes(d);
 
     // リング：最低ラインの薄い弧＋目盛り、達成分の弧
     const pct = Math.min(1, today / dailyGoal), minPct = Math.min(1, pr.minGoal / dailyGoal);
@@ -512,5 +544,7 @@
   }
 
   KB.autoStartLog = autoStartLog;
+  KB.studioTake = studioTake;
+  KB.practiceItem = practiceItem;
   KB.log = { init: prInit };
 })();
